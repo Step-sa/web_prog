@@ -5,7 +5,7 @@ from django.db import models
 class Books(models.Model):
     name = models.TextField()
     author = models.TextField()
-    price = models.IntegerField()
+    price = models.PositiveIntegerField()
 
     def __str__(self):
         return self.name
