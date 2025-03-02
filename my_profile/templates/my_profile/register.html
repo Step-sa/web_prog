@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Регистрация</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'static/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'my_profile/css/form.css' %}">
+</head>
+<body>
+    <div>
+        <a href="{% url 'main_view:home' %}" class="home btn btn-success">Главная страница</a>
+    </div>
+    <div class="container">
+        <h1>Регистрация</h1>
+        <div class="form-container">
+            <form method="post">
+                {% csrf_token %}
+                <label for="id_username">Ваш логин</label>
+                {{ form.username }}
+                <label for="id_display_name">Ваш никнейм</label>
+                {{ form.display_name }}
+                <label for="id_email">Введите почту</label>
+                {{ form.email }}
+                <label for="id_password1">Введите пароль</label>
+                {{ form.password1 }}
+                <label for="id_password2">Повторите пароль</label>
+                {{ form.password2 }}
+                <label for="id_role">Роль</label>
+                {{ form.role }}
+                <button type="submit" class="btn btn-success">Зарегистрироваться</button>
+            </form>
+        </div>
+    </div>
+    <div class="another">
+        <a href="/profile/login/" class="btn btn-secondary">Есть аккаунт? Войти</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1 @@
+data_base_password = 'Asd343xd'

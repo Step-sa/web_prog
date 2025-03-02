@@ -1,0 +1,23 @@
+.book-list {
+    padding: 0;
+}
+
+.book-item {
+    background-color: white;
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.book-item .item {
+    color: #12327a;
+    flex-grow: 1;
+}
+
+.book-item .btn {
+    margin-left: 10px;
+}
