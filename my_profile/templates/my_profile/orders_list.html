@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>Ваши заказы</h2>
+
+{% for order in orders %}
+    <div>
+        <h3>Заказ #{{ order.id }} ({{ order.created_at }})</h3>
+        <p>Общая стоимость: {{ order.total_price }}</p>
+        <ul>
+            {% for item in order.items.all %}
+                <li>{{ item.book.title }} - {{ item.quantity }} шт. x {{ item.price }} = {{ item.get_cost }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% empty %}
+    <p>У вас пока нет заказов.</p>
+{% endfor %}
+</body>
+</html>

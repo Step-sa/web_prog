@@ -18,11 +18,11 @@
         <div class="form-container">
             <form method="post">
                 {% csrf_token %}
-                <label for="id_name">Название книги</label>
+                <label>Название книги</label>
                 {{ form.name }}
-                <label for="id_author">Автор</label>
+                <label>Автор</label>
                 {{ form.author }}
-                <label for="id_price">Цена</label>
+                <label>Цена</label>
                 {{ form.price }}
                 <button type="submit" class="btn btn-primary">Изменить информацию о книге</button>
             </form>

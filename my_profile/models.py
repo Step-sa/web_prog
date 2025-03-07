@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from manipulate_book.models import Books
 
 
 class CustomUser(AbstractUser):
@@ -16,3 +17,20 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.display_name
+
+class Order(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='orders')
+    created_at = models.DateTimeField(auto_now_add=True)
+    total_price = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f'Заказ {self.id}'
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    book = models.ForeignKey(Books, on_delete=models.CASCADE)
+    price = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField()
+
+    def get_cost(self):
+        return self.price * self.quantity
