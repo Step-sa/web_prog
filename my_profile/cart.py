@@ -11,7 +11,6 @@ class Cart:
 
     def __iter__(self):
         book_ids = self.cart.keys()
-        #?????
         books = Books.objects.filter(id__in=book_ids)
         for book in books:
             self.cart[str(book.id)]['book'] = book

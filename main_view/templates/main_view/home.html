@@ -19,8 +19,9 @@
                 <a href="/profile/logout" class="btn btn-danger">
                     Выйти
                 </a>
+                <a href="{% url 'my_profile:cart_detail' %} " class="btn btn-primary">Корзина</a>
             </p>
-        <a href="{% url 'my_profile:cart_detail' %}">Корзина</a>
+
         {% else %}
         <a href="/profile/register/" class="btn btn-secondary">Зарегистрироваться</a>
         <a href="/profile/login/" class="btn btn-success">Войти</a>

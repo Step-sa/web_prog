@@ -4,8 +4,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from manipulate_book.models import Books
-
-
+from django.utils import timezone
 class CustomUser(AbstractUser):
     ROLES = (
         ('user', 'Обычный пользователь'),
@@ -20,11 +19,8 @@ class CustomUser(AbstractUser):
 
 class Order(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='orders')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     total_price = models.PositiveIntegerField()
-
-    def __str__(self):
-        return f'Заказ {self.id}'
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')

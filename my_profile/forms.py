@@ -29,6 +29,3 @@ class CustomPasswordChangeForm(PasswordChangeForm):
     old_password = forms.CharField(label="Введите старый пароль", widget=forms.PasswordInput())
     new_password1 = forms.CharField(label="Введите новый пароль", widget=forms.PasswordInput())
     new_password2 = forms.CharField(label="Повторите пароль", widget=forms.PasswordInput())
-
-class OrderCreateForm(forms.Form):
-    confirm = forms.BooleanField(label="Подтверждаю заказ", required=True)

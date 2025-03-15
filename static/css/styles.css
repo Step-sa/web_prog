@@ -79,3 +79,9 @@ h1 {
 .home {
   width: 100%;
 }
+
+
+.profbut{
+    display: flex;
+    justify-content: center;
+}
