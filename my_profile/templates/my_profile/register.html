@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     {% load static %}
     <meta charset="UTF-8">
@@ -7,6 +7,22 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'static/css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'my_profile/css/form.css' %}">
+    <style>
+        .error-message {
+            color: red;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+        .is-invalid {
+            border-color: #dc3545 !important;
+        }
+        .is-valid {
+            border-color: #28a745 !important;
+        }
+        .form-control {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
     <div>
@@ -15,26 +31,181 @@
     <div class="container">
         <h1>Регистрация</h1>
         <div class="form-container">
-            <form method="post">
+            <form method="post" id="registerForm">
                 {% csrf_token %}
-                <label for="id_username">Ваш логин</label>
-                {{ form.username }}
-                <label for="id_display_name">Ваш никнейм</label>
-                {{ form.display_name }}
-                <label for="id_email">Введите почту</label>
-                {{ form.email }}
-                <label for="id_password1">Введите пароль</label>
-                {{ form.password1 }}
-                <label for="id_password2">Повторите пароль</label>
-                {{ form.password2 }}
-                <label for="id_role">Роль</label>
-                {{ form.role }}
-                <button type="submit" class="btn btn-success">Зарегистрироваться</button>
+                <div class="form-group">
+                    <label for="id_username">Ваш логин</label>
+                    {{ form.username }}
+                    <div id="usernameError" class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="id_display_name">Ваш никнейм</label>
+                    {{ form.display_name }}
+                    <div id="displayNameError" class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="id_email">Введите почту</label>
+                    {{ form.email }}
+                    <div id="emailError" class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="id_password1">Введите пароль</label>
+                    {{ form.password1 }}
+                    <div id="password1Error" class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="id_password2">Повторите пароль</label>
+                    {{ form.password2 }}
+                    <div id="password2Error" class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <label for="id_role">Роль</label>
+                    {{ form.role }}
+                </div>
+                <button type="submit" class="btn btn-success" id="submitButton" disabled>Зарегистрироваться</button>
             </form>
         </div>
     </div>
     <div class="another">
         <a href="/profile/login/" class="btn btn-secondary">Есть аккаунт? Войти</a>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registerForm');
+            const submitButton = document.getElementById('submitButton');
+
+            const usernameField = document.getElementById('id_username');
+            const displayNameField = document.getElementById('id_display_name');
+            const emailField = document.getElementById('id_email');
+            const password1Field = document.getElementById('id_password1');
+            const password2Field = document.getElementById('id_password2');
+
+            usernameField.addEventListener('blur', validateUsername);
+            emailField.addEventListener('blur', validateEmail);
+            password1Field.addEventListener('input', validatePassword);
+            password2Field.addEventListener('input', validatePasswordConfirm);
+
+            form.addEventListener('input', function() {
+                validateForm();
+            });
+
+            function validateUsername() {
+                const username = usernameField.value.trim();
+                const errorElement = document.getElementById('usernameError');
+
+                if (username.length < 3) {
+                    usernameField.classList.add('is-invalid');
+                    usernameField.classList.remove('is-valid');
+                    errorElement.textContent = 'Логин должен содержать не менее 3 символов';
+                    return false;
+                }
+
+                fetch('/profile/check_username/?username=' + encodeURIComponent(username))
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.exists) {
+                            usernameField.classList.add('is-invalid');
+                            usernameField.classList.remove('is-valid');
+                            errorElement.textContent = 'Этот логин уже занят';
+                        } else {
+                            usernameField.classList.remove('is-invalid');
+                            usernameField.classList.add('is-valid');
+                            errorElement.textContent = '';
+                        }
+                        validateForm();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+
+                return true;
+            }
+
+            function validateEmail() {
+                const email = emailField.value.trim();
+                const errorElement = document.getElementById('emailError');
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (!emailRegex.test(email)) {
+                    emailField.classList.add('is-invalid');
+                    emailField.classList.remove('is-valid');
+                    errorElement.textContent = 'Введите корректный email адрес';
+                    return false;
+                } else {
+                    emailField.classList.remove('is-invalid');
+                    emailField.classList.add('is-valid');
+                    errorElement.textContent = '';
+                    return true;
+                }
+            }
+
+            function validatePassword() {
+                const password = password1Field.value;
+                const errorElement = document.getElementById('password1Error');
+                let errorMessage = '';
+                let isValid = true;
+
+                if (password.length < 6) {
+                    errorMessage = 'Пароль должен содержать не менее 6 символов';
+                    isValid = false;
+                }
+
+                else if (!/\d/.test(password)) {
+                    errorMessage = 'Пароль должен содержать хотя бы одну цифру';
+                    isValid = false;
+                }
+
+                else if (!/[A-ZА-ЯЁ]/.test(password)) {
+                    errorMessage = 'Пароль должен содержать хотя бы одну заглавную букву';
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    password1Field.classList.add('is-invalid');
+                    password1Field.classList.remove('is-valid');
+                    errorElement.textContent = errorMessage;
+                    return false;
+                } else {
+                    password1Field.classList.remove('is-invalid');
+                    password1Field.classList.add('is-valid');
+                    errorElement.textContent = '';
+                    return true;
+                }
+            }
+
+            function validatePasswordConfirm() {
+                const password1 = password1Field.value;
+                const password2 = password2Field.value;
+                const errorElement = document.getElementById('password2Error');
+
+                if (password1 !== password2) {
+                    password2Field.classList.add('is-invalid');
+                    password2Field.classList.remove('is-valid');
+                    errorElement.textContent = 'Пароли не совпадают';
+                    return false;
+                } else if (password2.length > 0) {
+                    password2Field.classList.remove('is-invalid');
+                    password2Field.classList.add('is-valid');
+                    errorElement.textContent = '';
+                    return true;
+                }
+                return false;
+            }
+
+            function validateForm() {
+                const isUsernameValid = usernameField.classList.contains('is-valid');
+                const isEmailValid = emailField.classList.contains('is-valid');
+                const isPassword1Valid = password1Field.classList.contains('is-valid');
+                const isPassword2Valid = password2Field.classList.contains('is-valid');
+
+                if (isUsernameValid && isEmailValid && isPassword1Valid && isPassword2Valid) {
+                    submitButton.disabled = false;
+                } else {
+                    submitButton.disabled = true;
+                }
+            }
+        });
+    </script>
 </body>
 </html>

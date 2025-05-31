@@ -18,7 +18,7 @@
         {% for order in orders %}
             <div class="card mb-4">
                 <div class="card-header">
-                    <h3 class="card-title">Заказ #{{ order.id }} ({{ order.created_at }})</h3>
+                    <h3 class="card-title">Заказ #{{ order.id }} ({{ order.created_at|date:"Y-m-d H:i:s" }})</h3>
                 </div>
                 <div class="card-body">
                     <p class="card-text"><strong>Общая стоимость:</strong> {{ order.total_price }}</p>

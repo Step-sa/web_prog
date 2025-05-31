@@ -3,10 +3,16 @@ from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from .forms import RegisterForm, LoginForm, UserUpdateForm, CustomPasswordChangeForm
 from manipulate_book.models import Books
-from .models import Order, OrderItem
+from .models import Order, OrderItem, CustomUser
 from .cart import Cart
+from django.http import JsonResponse
+
 # Create your views here.
 
+def check_username(request):
+    username = request.GET.get('username', '')
+    exists = CustomUser.objects.filter(username__iexact=username).exists()
+    return JsonResponse({'exists': exists})
 
 @login_required(login_url='/profile/login/')
 def my_profile(request):
@@ -105,6 +111,7 @@ def order_create(request):
     else:
         return render(request, 'my_profile/order_create.html',
                   {'cart': cart})
+
 
 def orders_list(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
