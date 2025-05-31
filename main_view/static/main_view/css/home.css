@@ -12,6 +12,13 @@
     justify-content: space-between;
     align-items: center;
 }
+        }
+.book-item:hover {
+            background-color: #f5f5f5;
+        }
+.pagination {
+            margin-top: 20px;
+        }
 
 .book-item .item {
     color: #12327a;

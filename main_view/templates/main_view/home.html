@@ -26,6 +26,32 @@
         <a href="/profile/register/" class="btn btn-secondary">Зарегистрироваться</a>
         <a href="/profile/login/" class="btn btn-success">Войти</a>
         {% endif %}
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Фильтр по цене</h5>
+                <form method="get" class="row g-3">
+                    <div class="col-md-5">
+                        <label for="min_price" class="form-label">Минимальная цена</label>
+                        <input type="number" class="form-control" id="min_price" name="min_price"
+                               value="{{ min_price }}" placeholder="От">
+                    </div>
+                    <div class="col-md-5">
+                        <label for="max_price" class="form-label">Максимальная цена</label>
+                        <input type="number" class="form-control" id="max_price" name="max_price"
+                               value="{{ max_price }}" placeholder="До">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        {% if min_price or max_price %}
+                            <a href="?" class="btn btn-secondary">Сбросить</a>
+                        {% else %}
+                            <button type="submit" class="btn btn-primary">Применить</button>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <ul class="book-list">
             {% if books %}
                 {% for book in books %}
@@ -53,15 +79,15 @@
         <div class="pagination">
             <span class="step-links">
                 {% if books.has_previous %}
-                    <a href="?page=1">&laquo; первая</a>
-                    <a href="?page={{ books.previous_page_number }}">предыдущая</a>
+                    <a href="?page=1{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}">&laquo; первая</a>
+                    <a href="?page={{ books.previous_page_number }}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}">предыдущая</a>
                 {% endif %}
                 <span class="current">
                     Страница {{ books.number }} из {{ books.paginator.num_pages }}.
                 </span>
                 {% if books.has_next %}
-                    <a href="?page={{ books.next_page_number }}">следующая</a>
-                    <a href="?page={{ books.paginator.num_pages }}">последняя &raquo;</a>
+                    <a href="?page={{ books.next_page_number }}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}">следующая</a>
+                    <a href="?page={{ books.paginator.num_pages }}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}">последняя &raquo;</a>
                 {% endif %}
             </span>
         </div>
