@@ -139,3 +139,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'my_profile/'
 
 CART_SESSION_ID = 'cart'
+
+PASSWORD_HASHERS = ["book_shelf.hash.CustomPasswordHasher"]
